@@ -124,7 +124,17 @@ $ npm run test:cov
 - [x] Authorization (Guards)
 - [ ] Redis Integration
 - [ ] Custom Error handling
+- [x] HMR
 
 ## Cautions
 
 + Not to use `update` method of repository for Many-to-Many relations, use `save` instead. For details, refer to [https://github.com/typeorm/typeorm/issues/2821](https://github.com/typeorm/typeorm/issues/2821).
++ To make **typeorm** work with webpack hmr, `entities: ['**/*.entity{ .ts,.js}']` cannot be used. Use the following instead,
+```ts
+{
+  // https://github.com/nestjs/nest/issues/755#issuecomment-496793495
+  entities: getMetadataArgsStorage().tables.map(tbl => tbl.target),
+  // To resolve `Cannot create a new connection named "default", because connection with such name already exist and it now has an active connection session.`
+  keepConnectionAlive: true, 
+}
+```

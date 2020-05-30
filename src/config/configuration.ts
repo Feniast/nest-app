@@ -1,6 +1,10 @@
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import * as path from 'path';
+import { getMetadataArgsStorage } from 'typeorm';
 
 const isProd = process.env.NODE_ENV === 'production';
+
+const isHMROn = process.env.HMR === 'true';
 
 const synchroize = isProd ? false : process.env.DATABASE_SYNCHRONIZE === 'true';
 
@@ -22,13 +26,15 @@ export default () => ({
     password: process.env.DATABASE_PASSWORD || 'root',
     database: process.env.DATABASE_DATABASE || 'test',
     synchroize,
-    logging: isProd ? ['error'] : ['query', 'error', 'schema'],
-    entities: ['**/*.entity{ .ts,.js}'],
+    logging: isProd ? ['error'] : ['error', 'schema'],
+    // entities: [path.join(__dirname, '**/*.entity{.ts,.js}')], // this cannot work with webpack
+    entities: getMetadataArgsStorage().tables.map(tbl => tbl.target),
     migrationsTableName: 'migration',
     migrations: ['src/migrations/*.js'],
     cli: {
       migrationsDir: 'src/migrations',
     },
     namingStrategy: new SnakeNamingStrategy(),
+    keepConnectionAlive: isHMROn,
   },
 });
