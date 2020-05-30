@@ -50,6 +50,34 @@ app.useGlobalPipes(new ValidationPipe());
 ```
 Add validation rules as decorators to your request dto class. For more details, refer to [class-validator](https://github.com/typestack/class-validator#validation-decorators).
 
+```ts
+export class CreateSysAdminDto {
+  @IsNotEmpty({
+    message: '名字不能为空'
+  })
+  name: string;
+
+  @IsNotEmpty({
+    message: '密码不能为空'
+  })
+  @Matches(/^[\s\S]{6,32}$/, {
+    message: '密码不少于6位，最大32位',
+  })
+  password: string;
+
+  @IsOptional()
+  @IsMobilePhone(undefined, undefined, {
+    message: '手机号格式错误'
+  })
+  mobile?: string;
+
+  @IsInt({ each: true })
+  @IsOptional()
+  @IsArray()
+  roles?: number[];
+}
+```
+
 ## Pagination
 Reference: [nestjs-typeorm-paginate](https://github.com/nestjsx/nestjs-typeorm-paginate)
 In your repository method, for example
@@ -92,8 +120,11 @@ $ npm run test:cov
 ```
 
 ## Current TODOs
-- [ ] Authentication (JWT)
-- [ ] Authorization (Guards)
+- [x] Authentication (JWT)
+- [x] Authorization (Guards)
 - [ ] Redis Integration
 - [ ] Custom Error handling
 
+## Cautions
+
++ Not to use `update` method of repository for Many-to-Many relations, use `save` instead. For details, refer to [https://github.com/typeorm/typeorm/issues/2821](https://github.com/typeorm/typeorm/issues/2821).

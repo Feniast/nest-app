@@ -1,12 +1,17 @@
-const synchroize =
-  process.env.NODE_ENV === 'production'
-    ? false
-    : process.env.DATABASE_SYNCHRONIZE === 'true';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+
+const isProd = process.env.NODE_ENV === 'production';
+
+const synchroize = isProd ? false : process.env.DATABASE_SYNCHRONIZE === 'true';
 
 export default () => ({
   serverPort: parseInt(process.env.PORT, 10) || 3000,
   security: {
-    saltRounds: parseInt(process.env.PASSWD_SALT_ROUNDS, 10) || 10
+    saltRounds: parseInt(process.env.PASSWD_SALT_ROUNDS, 10) || 10,
+    jwt: {
+      secret: process.env.JWT_SECRET || 'provide_a_jwt_secret',
+      expires: parseInt(process.env.JWT_EXPIRE, 10) || 12000,
+    },
   },
   db: {
     type: process.env.DATABASE_TYPE || 'mysql',
@@ -17,12 +22,13 @@ export default () => ({
     password: process.env.DATABASE_PASSWORD || 'root',
     database: process.env.DATABASE_DATABASE || 'test',
     synchroize,
-    logging: ['query', 'error', 'schema'],
+    logging: isProd ? ['error'] : ['query', 'error', 'schema'],
     entities: ['**/*.entity{ .ts,.js}'],
     migrationsTableName: 'migration',
     migrations: ['src/migrations/*.js'],
     cli: {
       migrationsDir: 'src/migrations',
-    }
+    },
+    namingStrategy: new SnakeNamingStrategy(),
   },
 });

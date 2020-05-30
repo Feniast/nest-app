@@ -12,7 +12,7 @@ async function bootstrap() {
 
   // validate incoming request entity
   app.useGlobalPipes(
-    new ValidationPipe({ transform: true, disableErrorMessages: false }),
+    new ValidationPipe({ transform: true, disableErrorMessages: false, whitelist: true }),
   );
 
   // transform response entity

@@ -5,7 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  ManyToMany,
 } from 'typeorm';
+import { SysAdmin } from '../sys-admin/sys-admin.entity';
 
 export enum SysRoleStatus {
   ACTIVE = 1,
@@ -36,6 +38,14 @@ export class SysAdminRole {
   name: string;
 
   @Column({
+    comment: '角色描述',
+    nullable: true,
+    default: '',
+    length: 255
+  })
+  descr: string;
+
+  @Column({
     type: 'enum',
     enum: SysRoleStatus,
     comment: '状态',
@@ -57,4 +67,7 @@ export class SysAdminRole {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @ManyToMany(() => SysAdmin, sysAdmin => sysAdmin.roles)
+  users: SysAdmin[];
 }

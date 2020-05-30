@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, JoinTable, ManyToMany } from 'typeorm';
 import { SysAdminRole } from '../sys-admin-role/sys-admin-role.entity';
-import { Exclude } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 
 export enum SysAdminStatus {
   ACTIVE = 1,
@@ -54,11 +54,17 @@ export class SysAdmin {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToMany(() => SysAdminRole, {
+  @ManyToMany(() => SysAdminRole, sysAdminRole => sysAdminRole.users, {
     cascade: true,
+    eager: true
   })
   @JoinTable({
     name: 'sys_admin_role_relation'
   })
+  @Transform((roles) => roles.map(role => ({
+    name: role.name,
+    code: role.code,
+    id: role.id
+  })))
   roles: SysAdminRole[];
 }

@@ -1,6 +1,6 @@
-import { Repository, EntityRepository, Like, FindConditions } from "typeorm";
-import { SysAdmin } from "./sys-admin.entity";
-import { SysAdminQueryDto } from "./dto/SysAdminQuery.dto";
+import { Repository, EntityRepository, Like, FindConditions } from 'typeorm';
+import { SysAdmin } from './sys-admin.entity';
+import { SysAdminQueryDto } from './dto/SysAdminQuery.dto';
 import { paginate, Pagination } from 'nestjs-typeorm-paginate';
 
 @EntityRepository(SysAdmin)
@@ -21,8 +21,17 @@ export class SysAdminRespository extends Repository<SysAdmin> {
   findByName(name: string): Promise<SysAdmin | undefined> {
     const admin = this.findOne({
       where: {
-        name
-      }
+        name,
+      },
+    });
+    return admin;
+  }
+
+  findById(id: number): Promise<SysAdmin | undefined> {
+    const admin = this.findOne({
+      where: {
+        id,
+      },
     });
     return admin;
   }

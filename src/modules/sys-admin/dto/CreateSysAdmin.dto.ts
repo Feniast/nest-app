@@ -5,12 +5,14 @@ import {
   Matches,
   IsInt,
   IsArray,
+  MaxLength,
 } from 'class-validator';
 
 export class CreateSysAdminDto {
   @IsNotEmpty({
     message: '名字不能为空'
   })
+  @MaxLength(64)
   name: string;
 
   @IsNotEmpty({
