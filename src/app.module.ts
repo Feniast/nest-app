@@ -7,6 +7,7 @@ import { SysAdminModule } from './modules/sys-admin/sys-admin.module';
 import { SysAdminRoleModule } from './modules/sys-admin-role/sys-admin-role.module';
 import { AuthModule } from './modules/auth/auth.module';
 import configuration from './config/configuration';
+import { RedisModule } from 'nestjs-redis';
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -17,6 +18,12 @@ const env = process.env.NODE_ENV || 'development';
         return configService.get('db');
       },
       inject: [ConfigService],
+    }),
+    RedisModule.forRootAsync({
+      useFactory: (configService: ConfigService) => {
+        return configService.get('redis');
+      },
+      inject: [ConfigService]
     }),
     ConfigModule.forRoot({
       isGlobal: true,

@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { TokenBlacklistService } from './token-blacklist.service';
+import { RedisModule } from 'nestjs-redis';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { TokenBlacklistService } from './token-blacklist.service';
       },
       inject: [ConfigService],
     }),
+    RedisModule
   ],
   providers: [AuthService, JwtStrategy, TokenBlacklistService],
   controllers: [AuthController],

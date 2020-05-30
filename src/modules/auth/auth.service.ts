@@ -33,14 +33,14 @@ export class AuthService {
 
   async validate(jwtPayload: IJwtPayload): Promise<SysAdmin | undefined> {
     const jti = jwtPayload.jti;
-    if (this.tokenBlackListService.isBlocked(jti)) {
+    if (await this.tokenBlackListService.isBlocked(jti)) {
       return;
     }
     return this.sysAdminService.findById(jwtPayload.sub);
   }
 
   async logout(token: string) {
-    this.tokenBlackListService.put(token);
+    await this.tokenBlackListService.put(token);
     return true;
   }
 }

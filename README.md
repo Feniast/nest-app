@@ -122,7 +122,7 @@ $ npm run test:cov
 ## Current TODOs
 - [x] Authentication (JWT)
 - [x] Authorization (Guards)
-- [ ] Redis Integration
+- [x] Redis Integration
 - [ ] Custom Error handling
 - [x] HMR
 

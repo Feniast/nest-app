@@ -1,6 +1,7 @@
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import * as path from 'path';
 import { getMetadataArgsStorage } from 'typeorm';
+import { DEFAULT_CLIENT } from 'src/common/constants/redis';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -36,5 +37,13 @@ export default () => ({
     },
     namingStrategy: new SnakeNamingStrategy(),
     keepConnectionAlive: isHMROn,
+  },
+  redis: {
+    name: DEFAULT_CLIENT,
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    db: parseInt(process.env.REDIS_DB, 10) || 0,
+    password: process.env.REDIS_PASSWORD,
+    keyPrefix: process.env.REDIS_PREFIX || '',
   },
 });
